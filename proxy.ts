@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { auth } from './auth'
 import {
-  apiAuthPrefix,
+  apiPrefix,
   authRoutes,
   DEFAULT_LOGIN_REDIRECT,
   publicRoutes,
@@ -11,11 +11,11 @@ const proxy = auth((req) => {
   const { nextUrl } = req
   const isLoggedIn = !!req.auth
 
-  const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix)
+  const isApiRoute = nextUrl.pathname.startsWith(apiPrefix)
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname)
   const isAuthRoute = authRoutes.includes(nextUrl.pathname)
 
-  if (isApiAuthRoute) {
+  if (isApiRoute) {
     return
   }
 
