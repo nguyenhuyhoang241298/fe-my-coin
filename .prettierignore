@@ -1,0 +1,19 @@
+# git
+.github
+**/.gitattributes
+
+# editors
+.vscode
+*.un~
+*.swp
+
+# NPM
+**/node_modules
+
+# ext to ignore
+**/*.svg
+**/.DS_Store
+
+src/styles/*
+src/components/chart/lib/*
+public/*
