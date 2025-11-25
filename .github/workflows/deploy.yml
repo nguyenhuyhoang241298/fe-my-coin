@@ -29,4 +29,10 @@ jobs:
           docker run -d \
             --name fe-my-coin \
             -p 3000:3000 \
+            -e AUTH_SECRET="${{ secrets.AUTH_SECRET }}" \
+            -e AUTH_URL="${{ secrets.AUTH_URL }}" \
+            -e AUTH_TRUST_HOST="${{ secrets.AUTH_TRUST_HOST }}" \
+            -e API_ENDPOINT="${{ secrets.API_ENDPOINT }}" \
+            -e NEXT_PUBLIC_API_ENDPOINT="${{ secrets.NEXT_PUBLIC_API_ENDPOINT }}" \
+            -e NEXT_PUBLIC_AUTH_URL="${{ secrets.NEXT_PUBLIC_AUTH_URL }}" \
             fe-my-coin:latest
