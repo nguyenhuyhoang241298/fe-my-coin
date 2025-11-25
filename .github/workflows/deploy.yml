@@ -1,0 +1,32 @@
+name: Build & Deploy FE NextJS to Ubuntu
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: self-hosted
+
+    env:
+      PORT: 3000
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: |
+          docker build -t fe-my-coin:latest .
+
+      - name: Stop & remove old container (if exists)
+        run: |
+          docker rm -f fe-my-coin || true
+
+      - name: Run new container
+        run: |
+          docker run -d \
+            --name fe-my-coin \
+            -p 3000:3000 \
+            fe-my-coin:latest
