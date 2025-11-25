@@ -22,8 +22,8 @@ import { registerUser } from './api'
 export const registerSchema = z.object({
   email: z.string().email({ message: 'Email không hợp lệ' }),
   password: z.string().min(6, { message: 'Mật khẩu phải có ít nhất 6 ký tự' }),
-  fullname: z.string().min(1, { message: 'Vui lòng nhập họ tên' }),
-  phoneNumber: z.string().min(10, { message: 'Số điện thoại không hợp lệ' }),
+  fullName: z.string().min(1, { message: 'Vui lòng nhập họ tên' }),
+  phone: z.string().min(10, { message: 'Số điện thoại không hợp lệ' }),
 })
 
 type FormData = z.infer<typeof registerSchema>
@@ -39,8 +39,8 @@ export function RegisterForm({
     defaultValues: {
       email: '',
       password: '',
-      fullname: '',
-      phoneNumber: '',
+      fullName: '',
+      phone: '',
     },
   })
 
@@ -75,7 +75,7 @@ export function RegisterForm({
 
         <FormField
           control={form.control}
-          name="fullname"
+          name="fullName"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Họ và tên</FormLabel>
@@ -89,7 +89,7 @@ export function RegisterForm({
 
         <FormField
           control={form.control}
-          name="phoneNumber"
+          name="phone"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Số điện thoại</FormLabel>
