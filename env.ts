@@ -7,15 +7,18 @@ export const env = createEnv({
     AUTH_URL: z.string(),
     AUTH_TRUST_HOST: z.string(),
     API_ENDPOINT: z.string(),
+    TURNSTILE_SECRET_KEY: z.string(),
   },
 
   client: {
     NEXT_PUBLIC_API_ENDPOINT: z.string(),
     NEXT_PUBLIC_AUTH_URL: z.string(),
+    NEXT_PUBLIC_TURNSTILE_SITE_KEY: z.string(),
   },
 
   experimental__runtimeEnv: {
     NEXT_PUBLIC_API_ENDPOINT: process.env.NEXT_PUBLIC_API_ENDPOINT,
     NEXT_PUBLIC_AUTH_URL: process.env.NEXT_PUBLIC_AUTH_URL,
+    NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
   },
 })

@@ -9,9 +9,6 @@ jobs:
   build-and-deploy:
     runs-on: self-hosted
 
-    env:
-      PORT: 3000
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -35,4 +32,6 @@ jobs:
             -e API_ENDPOINT="${{ secrets.API_ENDPOINT }}" \
             -e NEXT_PUBLIC_API_ENDPOINT="${{ secrets.NEXT_PUBLIC_API_ENDPOINT }}" \
             -e NEXT_PUBLIC_AUTH_URL="${{ secrets.NEXT_PUBLIC_AUTH_URL }}" \
+            -e TURNSTILE_SECRET_KEY="${{ secrets.TURNSTILE_SECRET_KEY }}" \
+            -e NEXT_PUBLIC_TURNSTILE_SITE_KEY="${{ secrets.NEXT_PUBLIC_TURNSTILE_SITE_KEY }}" \
             fe-my-coin:latest
