@@ -20,8 +20,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
-import { checkCaptchaToken } from './actions'
-import { registerUser } from './api'
+import { registerUser } from './actions'
 
 export const registerSchema = z.object({
   email: z.string().email({ message: 'Email không hợp lệ' }),
@@ -53,13 +52,7 @@ export function RegisterForm({
     mutationFn: async (formData: FormData) => {
       if (!captchaToken) return
 
-      const checkCaptchaResponse = await checkCaptchaToken(captchaToken)
-
-      if (checkCaptchaResponse.error) {
-        throw new Error(checkCaptchaResponse.error)
-      }
-
-      return registerUser(formData)
+      return registerUser({ ...formData, captchaToken })
     },
     onSuccess: () => {
       toast.success('Đăng ký thành công')

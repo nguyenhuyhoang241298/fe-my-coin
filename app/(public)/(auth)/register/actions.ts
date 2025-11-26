@@ -1,6 +1,7 @@
 'use server'
 
 import { env } from '@/env'
+import axiosServer from '@/lib/axios/axiosServer'
 import { validateTurnstileToken } from 'next-turnstile'
 
 export async function checkCaptchaToken(token: string) {
@@ -19,4 +20,21 @@ export async function checkCaptchaToken(token: string) {
   }
 
   return { error: null }
+}
+
+export const registerUser = async (data: {
+  email: string
+  password: string
+  fullName: string
+  phone: string
+  captchaToken: string
+}) => {
+  const checkCaptchaResponse = await checkCaptchaToken(data.captchaToken)
+
+  if (checkCaptchaResponse.error) {
+    throw new Error(checkCaptchaResponse.error)
+  }
+
+  const res = await axiosServer.post('/api/v1/auth/register', data)
+  return res.data
 }
