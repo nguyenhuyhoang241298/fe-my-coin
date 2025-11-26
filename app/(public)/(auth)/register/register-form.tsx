@@ -10,13 +10,17 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { env } from '@/env'
 import { cn } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
+import { Turnstile } from 'next-turnstile'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
+import { checkCaptchaToken } from './actions'
 import { registerUser } from './api'
 
 export const registerSchema = z.object({
@@ -33,6 +37,7 @@ export function RegisterForm({
   ...props
 }: React.ComponentPropsWithoutRef<'form'>) {
   const router = useRouter()
+  const [captchaToken, setCaptchaToken] = useState<string>()
 
   const form = useForm<FormData>({
     resolver: zodResolver(registerSchema),
@@ -45,7 +50,17 @@ export function RegisterForm({
   })
 
   const registerMutation = useMutation({
-    mutationFn: (formData: FormData) => registerUser(formData),
+    mutationFn: async (formData: FormData) => {
+      if (!captchaToken) return
+
+      const checkCaptchaResponse = await checkCaptchaToken(captchaToken)
+
+      if (checkCaptchaResponse.error) {
+        throw new Error(checkCaptchaResponse.error)
+      }
+
+      return registerUser(formData)
+    },
     onSuccess: () => {
       toast.success('Đăng ký thành công')
       router.push('/login')
@@ -129,8 +144,14 @@ export function RegisterForm({
           )}
         />
 
+        <Turnstile
+          siteKey={env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+          onVerify={setCaptchaToken}
+          sandbox={process.env.NODE_ENV === 'development'}
+        />
+
         <Button
-          disabled={registerMutation.isPending}
+          disabled={registerMutation.isPending || !captchaToken}
           isLoading={registerMutation.isPending}
           type="submit"
           className="w-full"
