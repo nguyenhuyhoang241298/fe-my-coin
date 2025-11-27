@@ -15,12 +15,12 @@ import { cn } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { Turnstile } from 'next-turnstile'
-import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
 import { registerUser } from './actions'
+import { VerifyOtpDialog } from './verify-otp-dialog'
 
 export const registerSchema = z.object({
   email: z.string().email({ message: 'Email không hợp lệ' }),
@@ -35,8 +35,9 @@ export function RegisterForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<'form'>) {
-  const router = useRouter()
   const [captchaToken, setCaptchaToken] = useState<string>()
+  const [showOtpDialog, setShowOtpDialog] = useState(false)
+  const [registeredEmail, setRegisteredEmail] = useState('')
 
   const form = useForm<FormData>({
     resolver: zodResolver(registerSchema),
@@ -54,9 +55,12 @@ export function RegisterForm({
 
       return registerUser({ ...formData, captchaToken })
     },
-    onSuccess: () => {
-      toast.success('Đăng ký thành công')
-      router.push('/login')
+    onSuccess: (data, variables) => {
+      toast.success(
+        'Đăng ký thành công! Vui lòng kiểm tra email để xác thực tài khoản',
+      )
+      setRegisteredEmail(variables.email)
+      setShowOtpDialog(true)
     },
     onError: () => {
       toast.error('Đăng ký thất bại, vui lòng thử lại')
@@ -152,6 +156,12 @@ export function RegisterForm({
           Đăng ký
         </Button>
       </form>
+
+      <VerifyOtpDialog
+        open={showOtpDialog}
+        email={registeredEmail}
+        onOpenChange={setShowOtpDialog}
+      />
     </Form>
   )
 }

@@ -19,3 +19,11 @@ export const registerUser = async (data: {
   const res = await axiosServer.post('/api/v1/auth/register', data)
   return res.data
 }
+
+export const verifyRegisterOtp = async (data: {
+  email: string
+  otp: string
+}) => {
+  const res = await axiosServer.post('/api/v1/auth/verify-register-otp', data)
+  return res.data
+}
