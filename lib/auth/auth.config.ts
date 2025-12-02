@@ -1,7 +1,9 @@
 import { CredentialsSignin, type NextAuthConfig } from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 
+import { cookies } from 'next/headers'
 import { getUserByEmailAndPassword } from './api'
+import { AUTH_CONFIG } from './configs'
 
 class InvalidLoginError extends CredentialsSignin {
   constructor(code: string) {
@@ -20,11 +22,22 @@ export default {
       authorize: async (credentials) => {
         try {
           let user = null
+          const cookieStore = await cookies()
 
           user = await getUserByEmailAndPassword(
             credentials.email as string,
             credentials.password as string,
           )
+
+          if (user.accessToken) {
+            cookieStore.set({
+              name: AUTH_CONFIG.ACCESS_TOKEN,
+              value: user.accessToken,
+              httpOnly: true,
+              secure: true,
+              sameSite: 'lax',
+            })
+          }
 
           return user
         } catch (error) {

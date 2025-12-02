@@ -1,4 +1,3 @@
-export const FAKE_ADMIN = {
-  email: 'admin@goonus.io',
-  password: 'Conga@123',
+export const AUTH_CONFIG = {
+  ACCESS_TOKEN: 'accessToken',
 }

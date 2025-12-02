@@ -3,6 +3,7 @@ import axios from 'axios'
 
 const axiosClient = axios.create({
   baseURL: env.NEXT_PUBLIC_API_ENDPOINT,
+  withCredentials: true,
 })
 
 axiosClient.interceptors.request.use(
