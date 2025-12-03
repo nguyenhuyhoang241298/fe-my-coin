@@ -35,7 +35,8 @@ export default {
               value: user.accessToken,
               httpOnly: true,
               secure: true,
-              sameSite: 'lax',
+              sameSite: 'none',
+              domain: AUTH_CONFIG.DOMAIN,
             })
           }
 
