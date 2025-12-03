@@ -40,6 +40,17 @@ export default {
             })
           }
 
+          if (user.refreshToken) {
+            cookieStore.set({
+              name: AUTH_CONFIG.REFRESH_TOKEN,
+              value: user.refreshToken,
+              httpOnly: true,
+              secure: true,
+              sameSite: 'none',
+              domain: AUTH_CONFIG.DOMAIN,
+            })
+          }
+
           return user
         } catch (error) {
           console.error('Login error:', error)
