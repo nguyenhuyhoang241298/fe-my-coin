@@ -1,6 +1,6 @@
-import { signOut } from '@/auth'
 import { env } from '@/env'
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios'
+import { signOut } from 'next-auth/react'
 
 const axiosClient = axios.create({
   baseURL: env.NEXT_PUBLIC_API_ENDPOINT,
