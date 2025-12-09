@@ -1,6 +1,7 @@
 import { env } from '@/env'
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios'
 import { signOut } from 'next-auth/react'
+import { DEFAULT_LOGOUT_REDIRECT } from '../auth/routes'
 
 const axiosClient = axios.create({
   baseURL: env.NEXT_PUBLIC_API_ENDPOINT,
@@ -87,7 +88,7 @@ axiosClient.interceptors.response.use(
       } catch (refreshError) {
         // Nếu refresh token thất bại, reject tất cả requests và đăng xuất
         processQueue(refreshError as AxiosError, null)
-        await signOut({ redirectTo: '/login' })
+        await signOut({ redirectTo: DEFAULT_LOGOUT_REDIRECT })
         return Promise.reject(refreshError)
       } finally {
         isRefreshing = false
@@ -96,7 +97,7 @@ axiosClient.interceptors.response.use(
 
     // Xử lý lỗi 403 - Forbidden
     if (error.response?.status === 403) {
-      await signOut({ redirectTo: '/login' })
+      await signOut({ redirectTo: DEFAULT_LOGOUT_REDIRECT })
       return Promise.reject(error)
     }
 

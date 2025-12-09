@@ -12,11 +12,19 @@ const Page = () => {
     },
   })
 
-  if (userQuery.isLoading) {
+  const userQuery1 = useQuery({
+    queryKey: ['example1'],
+    queryFn: async () => {
+      const res = await axiosClient.get('/api/v1/user')
+      return res.data
+    },
+  })
+
+  if (userQuery.isLoading || userQuery1.isLoading) {
     return <div>Loading...</div>
   }
 
-  if (userQuery.isError) {
+  if (userQuery.isError || userQuery1.isError) {
     return <div>Error: {(userQuery.error as Error).message}</div>
   }
 
