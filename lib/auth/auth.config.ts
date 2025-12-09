@@ -3,7 +3,7 @@ import Credentials from 'next-auth/providers/credentials'
 
 import { cookies } from 'next/headers'
 import { getUserByEmailAndPassword } from './api'
-import { AUTH_CONFIG } from './configs'
+import { AUTH_CONFIG, cookieOptions } from './configs'
 
 class InvalidLoginError extends CredentialsSignin {
   constructor(code: string) {
@@ -31,25 +31,27 @@ export default {
           )
 
           if (user.accessToken) {
-            cookieStore.set({
-              name: AUTH_CONFIG.ACCESS_TOKEN,
-              value: user.accessToken,
-              httpOnly: true,
-              secure: process.env.NODE_ENV === 'production',
-              sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-              domain: AUTH_CONFIG.DOMAIN,
-            })
+            cookieStore.set(
+              AUTH_CONFIG.ACCESS_TOKEN,
+              user.accessToken,
+              cookieOptions,
+            )
           }
 
           if (user.refreshToken) {
-            cookieStore.set({
-              name: AUTH_CONFIG.REFRESH_TOKEN,
-              value: user.refreshToken,
-              httpOnly: true,
-              secure: process.env.NODE_ENV === 'production',
-              sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-              domain: AUTH_CONFIG.DOMAIN,
-            })
+            cookieStore.set(
+              AUTH_CONFIG.REFRESH_TOKEN,
+              user.refreshToken,
+              cookieOptions,
+            )
+          }
+
+          if (user.expiresAt) {
+            cookieStore.set(
+              AUTH_CONFIG.EXPIRES_AT,
+              user.expiresAt,
+              cookieOptions,
+            )
           }
 
           return user

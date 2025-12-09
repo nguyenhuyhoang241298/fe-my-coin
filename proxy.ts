@@ -4,19 +4,25 @@ import {
   apiPrefix,
   authRoutes,
   DEFAULT_LOGIN_REDIRECT,
+  DEFAULT_LOGOUT_REDIRECT,
+  fetchingServerSideDataRoutes,
   publicRoutes,
 } from './lib/auth/routes'
+import { handleRefreshTokenBeforeExpire } from './lib/auth/serverHelper'
 
-const proxy = auth((req) => {
+const proxy = auth(async (req) => {
   const { nextUrl } = req
   const isLoggedIn = !!req.auth
 
   const isApiRoute = nextUrl.pathname.startsWith(apiPrefix)
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname)
   const isAuthRoute = authRoutes.includes(nextUrl.pathname)
+  const hasServerSideDataFetchingRoute = fetchingServerSideDataRoutes.includes(
+    nextUrl.pathname,
+  )
 
   if (isApiRoute) {
-    return
+    return NextResponse.next()
   }
 
   if (isAuthRoute) {
@@ -28,7 +34,11 @@ const proxy = auth((req) => {
   }
 
   if (!isLoggedIn && !isPublicRoute) {
-    return Response.redirect(new URL(`/login`, nextUrl))
+    return Response.redirect(new URL(DEFAULT_LOGOUT_REDIRECT, nextUrl))
+  }
+
+  if (isLoggedIn && hasServerSideDataFetchingRoute) {
+    return await handleRefreshTokenBeforeExpire(req)
   }
 
   return NextResponse.next()

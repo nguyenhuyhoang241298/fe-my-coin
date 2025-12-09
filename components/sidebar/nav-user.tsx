@@ -24,12 +24,30 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar'
+import { cn } from '@/lib/utils'
+import { useMutation } from '@tanstack/react-query'
 import { signOut } from 'next-auth/react'
+import { toast } from 'sonner'
+import { logout } from './api'
 import { mockUser } from './configs'
 
 export function NavUser() {
   const { isMobile } = useSidebar()
   const user = mockUser
+
+  const logoutMutation = useMutation({
+    mutationFn: logout,
+    onSuccess: () => {
+      signOut()
+    },
+    onError: () => {
+      toast.error('Logout failed. Please try again.')
+    },
+  })
+
+  const handleLogout = () => {
+    logoutMutation.mutate()
+  }
 
   return (
     <SidebarMenu>
@@ -90,8 +108,10 @@ export function NavUser() {
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={() => signOut()}
-              className="cursor-pointer"
+              onClick={handleLogout}
+              className={cn('cursor-pointer', {
+                'opacity-50 pointer-events-none': logoutMutation.isPending,
+              })}
             >
               <LogOutIcon />
               Log out

@@ -14,6 +14,7 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from '@/components/ui/input-otp'
+import { DEFAULT_LOGOUT_REDIRECT } from '@/lib/auth/routes'
 import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -41,7 +42,7 @@ export function VerifyOtpDialog({
     onSuccess: () => {
       toast.success('Xác thực thành công! Vui lòng đăng nhập')
       onOpenChange(false)
-      router.push('/login')
+      router.push(DEFAULT_LOGOUT_REDIRECT)
     },
     onError: (error: any) => {
       toast.error(
