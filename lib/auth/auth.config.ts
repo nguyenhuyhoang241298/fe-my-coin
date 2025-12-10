@@ -1,5 +1,6 @@
 import { CredentialsSignin, type NextAuthConfig } from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
+import GoogleProvider from 'next-auth/providers/google'
 
 import { cookies } from 'next/headers'
 import { getUserByEmailAndPassword } from './api'
@@ -59,6 +60,17 @@ export default {
           console.error('Login error:', error)
           throw new InvalidLoginError('500')
         }
+      },
+    }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      authorization: {
+        params: {
+          prompt: 'consent',
+          access_type: 'offline',
+          response_type: 'code',
+        },
       },
     }),
   ],
