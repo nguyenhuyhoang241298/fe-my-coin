@@ -9,6 +9,11 @@ declare module 'next-auth' {
   interface User {
     accessToken?: string
     refreshToken?: string
+    user: {
+      image?: string
+      fullName?: string
+      email?: string
+    }
   }
 }
 
@@ -29,6 +34,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     jwt: async ({ token, user, account }) => {
       if (user) {
         token.accessToken = user.accessToken
+        token.picture = user.user.image
+        token.name = user.user.fullName
+        token.email = user.user.email
       }
 
       if (account) {
