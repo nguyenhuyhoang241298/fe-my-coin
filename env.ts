@@ -8,6 +8,8 @@ export const env = createEnv({
     AUTH_TRUST_HOST: z.string(),
     API_ENDPOINT: z.string(),
     TURNSTILE_SECRET_KEY: z.string(),
+    GOOGLE_CLIENT_ID: z.string(),
+    GOOGLE_CLIENT_SECRET: z.string(),
   },
 
   client: {
