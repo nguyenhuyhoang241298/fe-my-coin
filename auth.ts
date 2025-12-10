@@ -39,7 +39,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.email = user?.user?.email
       }
 
-      if (account?.type === 'oauth' && account.provider === 'google') {
+      if (account?.type === 'oidc' && account.provider === 'google') {
         const cookieStore = await cookies()
 
         const res = await axios.post(
