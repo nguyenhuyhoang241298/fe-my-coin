@@ -34,12 +34,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     jwt: async ({ token, user, account }) => {
       if (user) {
         token.accessToken = user.accessToken
-        token.picture = user.user.image
-        token.name = user.user.fullName
-        token.email = user.user.email
+        token.picture = user?.user?.image
+        token.name = user?.user?.fullName
+        token.email = user?.user?.email
       }
 
-      if (account) {
+      if (account?.type === 'oauth' && account.provider === 'google') {
         const cookieStore = await cookies()
 
         const res = await axios.post(
@@ -78,9 +78,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           )
         }
 
-        token.picture = resParsed.user.picture
-        token.name = resParsed.user.name
-        token.email = resParsed.user.email
+        token.picture = user?.image
+        token.name = user?.name
+        token.email = user?.email
       }
 
       return token
