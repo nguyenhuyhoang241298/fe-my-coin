@@ -15,9 +15,9 @@ import {
   UsersIcon,
 } from 'lucide-react'
 
-export const mockUser = {
-  name: 'Admin',
-  email: 'admin@goonus.io',
+export const DEFAULT_USER = {
+  name: 'User',
+  email: '',
   avatar: '/onus_avatar.png',
 }
 

@@ -15,6 +15,9 @@ declare module 'next-auth' {
 declare module 'next-auth' {
   interface Session {
     accessToken?: string
+    picture?: string
+    name?: string
+    email?: string
   }
 }
 
@@ -66,12 +69,20 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             cookieOptions,
           )
         }
+
+        token.picture = resParsed.user.picture
+        token.name = resParsed.user.name
+        token.email = resParsed.user.email
       }
 
       return token
     },
     session: async ({ session, token }) => {
       session.accessToken = token.accessToken as string
+      session.picture = token.picture as string
+      session.name = token.name as string
+      session.email = token.email as string
+
       return session
     },
   },

@@ -26,14 +26,14 @@ import {
 } from '@/components/ui/sidebar'
 import { cn } from '@/lib/utils'
 import { useMutation } from '@tanstack/react-query'
-import { signOut } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 import { toast } from 'sonner'
 import { logout } from './api'
-import { mockUser } from './configs'
+import { DEFAULT_USER } from './configs'
 
 export function NavUser() {
   const { isMobile } = useSidebar()
-  const user = mockUser
+  const { data: session } = useSession()
 
   const logoutMutation = useMutation({
     mutationFn: logout,
@@ -58,14 +58,19 @@ export function NavUser() {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent cursor-pointer data-[state=open]:text-sidebar-accent-foreground"
             >
-              <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={user.avatar} alt={user.name} />
+              <Avatar className="h-8 w-8 rounded-full">
+                <AvatarImage
+                  src={session?.picture || DEFAULT_USER.avatar}
+                  alt={session?.name || DEFAULT_USER.name}
+                />
                 <AvatarFallback className="rounded-lg">Onus</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{user.name}</span>
+                <span className="truncate font-medium">
+                  {session?.name || DEFAULT_USER.name}
+                </span>
                 <span className="truncate text-xs text-muted-foreground">
-                  {user.email}
+                  {session?.email || DEFAULT_USER.email}
                 </span>
               </div>
               <MoreVerticalIcon className="ml-auto size-4" />
@@ -79,14 +84,19 @@ export function NavUser() {
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.name} />
+                <Avatar className="h-8 w-8 rounded-full">
+                  <AvatarImage
+                    src={session?.picture || DEFAULT_USER.avatar}
+                    alt={session?.name || DEFAULT_USER.name}
+                  />
                   <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user.name}</span>
+                  <span className="truncate font-medium">
+                    {session?.name || DEFAULT_USER.name}
+                  </span>
                   <span className="truncate text-xs text-muted-foreground">
-                    {user.email}
+                    {session?.email || DEFAULT_USER.email}
                   </span>
                 </div>
               </div>
