@@ -15,9 +15,11 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
+import { TwoFADialog } from './components/TwoFADialog'
 
 export const signInSchema = z.object({
   email: z.string().email({ message: 'Email không hợp lệ' }),
@@ -31,6 +33,7 @@ export function LoginForm({
   ...props
 }: React.ComponentPropsWithoutRef<'form'>) {
   const router = useRouter()
+  const [show2FADialog, setShow2FADialog] = useState(false)
 
   const form = useForm<FormData>({
     resolver: zodResolver(signInSchema),
@@ -47,6 +50,11 @@ export function LoginForm({
         redirect: false,
       }),
     onSuccess: (data) => {
+      if (data.code === '2FA_REQUIRED') {
+        setShow2FADialog(true)
+        return
+      }
+
       if (!data || data.error) {
         toast.warning('Vui lòng kiểm tra lại tài khoản hoặc mật khẩu')
         return
@@ -55,7 +63,39 @@ export function LoginForm({
       toast.success('Đăng nhập thành công')
       router.push('/dashboard')
     },
+    onError: () => {
+      toast.error('Có lỗi xảy ra khi đăng nhập')
+    },
   })
+
+  const verify2FAMutation = useMutation({
+    mutationFn: ({
+      token,
+      formData,
+    }: {
+      token: string
+      formData: FormData
+    }) => {
+      return signIn('credentials', {
+        ...formData,
+        token,
+        redirect: false,
+      })
+    },
+    onSuccess: async (data) => {
+      if (data?.ok) {
+        toast.success('Đăng nhập thành công')
+        setShow2FADialog(false)
+        router.push('/dashboard')
+      } else {
+        toast.error('Có lỗi xảy ra khi đăng nhập')
+      }
+    },
+    onError: () => {
+      toast.error('Có lỗi xảy ra khi xác thực 2FA')
+    },
+  })
+
   function onSubmit(values: FormData) {
     loginMutation.mutate(values)
   }
@@ -111,6 +151,16 @@ export function LoginForm({
           Đăng nhập
         </Button>
       </form>
+
+      <TwoFADialog
+        isOpen={show2FADialog}
+        onOpenChange={setShow2FADialog}
+        onVerify={({ token, formData }) =>
+          verify2FAMutation.mutate({ token, formData })
+        }
+        formData={form.getValues()}
+        isPending={verify2FAMutation.isPending}
+      />
     </Form>
   )
 }

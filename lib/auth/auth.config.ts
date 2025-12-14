@@ -3,7 +3,7 @@ import Credentials from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'
 
 import { cookies } from 'next/headers'
-import { getUserByEmailAndPassword } from './api'
+import { login, login2FA } from './api'
 import { AUTH_CONFIG, cookieOptions } from './configs'
 
 class InvalidLoginError extends CredentialsSignin {
@@ -19,6 +19,7 @@ export default {
       credentials: {
         email: {},
         password: {},
+        token: {},
       },
       authorize: async (credentials) => {
         const cookieStore = await cookies()
@@ -26,10 +27,20 @@ export default {
         try {
           let user = null
 
-          user = await getUserByEmailAndPassword(
-            credentials.email as string,
-            credentials.password as string,
-          )
+          user = credentials.token
+            ? await login2FA(
+                credentials.email as string,
+                credentials.password as string,
+                credentials.token as string,
+              )
+            : await login(
+                credentials.email as string,
+                credentials.password as string,
+              )
+
+          if (user.code === '2FA_REQUIRED') {
+            throw new InvalidLoginError('2FA_REQUIRED')
+          }
 
           if (user.accessToken) {
             cookieStore.set(
@@ -58,6 +69,13 @@ export default {
           return user
         } catch (error) {
           console.error('Login error:', error)
+          if (
+            error instanceof InvalidLoginError &&
+            error.code === '2FA_REQUIRED'
+          ) {
+            throw new InvalidLoginError('2FA_REQUIRED')
+          }
+
           throw new InvalidLoginError('500')
         }
       },

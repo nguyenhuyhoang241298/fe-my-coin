@@ -12,12 +12,15 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
+import useUserQuery from '@/hooks/user/useUserQuery'
 import { NavDocuments } from './nav-documents'
 import { NavMain } from './nav-main'
 import { NavSecondary } from './nav-secondary'
 import { NavUser } from './nav-user'
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  useUserQuery()
+
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
