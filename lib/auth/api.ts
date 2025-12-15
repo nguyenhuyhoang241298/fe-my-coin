@@ -19,3 +19,12 @@ export const login2FA = async (
 
   return res.data
 }
+
+export const loginMagicLink = async (email: string, token: string) => {
+  const res = await axiosServer.post('/api/v1/auth/verify-magic-link', {
+    email,
+    accessToken: token,
+  })
+
+  return res.data
+}

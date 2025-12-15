@@ -7,8 +7,8 @@ import {
 import { SplineScene } from '@/components/ui/splite'
 import { GalleryVerticalEnd } from 'lucide-react'
 import Link from 'next/link'
-import GmailSigninButton from './GmailSigninButton'
 import { LoginForm } from './login-form'
+import OtherType from './other-type'
 import { Spotlight } from './spot-light'
 
 export default function LoginPage() {
@@ -29,7 +29,7 @@ export default function LoginPage() {
             <FieldGroup className="mt-6">
               <FieldSeparator>Hoặc tiếp tục với</FieldSeparator>
               <Field>
-                <GmailSigninButton />
+                <OtherType />
                 <FieldDescription className="text-center">
                   Bạn chưa có tài khoản?{' '}
                   <Link

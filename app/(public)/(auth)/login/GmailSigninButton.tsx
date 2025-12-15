@@ -10,9 +10,14 @@ const GmailSigninButton = () => {
   }
 
   return (
-    <Button onClick={signInWithGmail} variant="outline" type="button">
+    <Button
+      onClick={signInWithGmail}
+      variant="outline"
+      className="flex-1"
+      type="button"
+    >
       <Mail className="size-4 mr-1" />
-      Đăng nhập với Gmail
+      Gmail
     </Button>
   )
 }

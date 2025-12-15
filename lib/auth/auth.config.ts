@@ -3,7 +3,7 @@ import Credentials from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'
 
 import { cookies } from 'next/headers'
-import { login, login2FA } from './api'
+import { login, login2FA, loginMagicLink } from './api'
 import { AUTH_CONFIG, cookieOptions } from './configs'
 
 class InvalidLoginError extends CredentialsSignin {
@@ -20,6 +20,7 @@ export default {
         email: {},
         password: {},
         token: {},
+        isMagicLink: {},
       },
       authorize: async (credentials) => {
         const cookieStore = await cookies()
@@ -27,16 +28,23 @@ export default {
         try {
           let user = null
 
-          user = credentials.token
-            ? await login2FA(
-                credentials.email as string,
-                credentials.password as string,
-                credentials.token as string,
-              )
-            : await login(
-                credentials.email as string,
-                credentials.password as string,
-              )
+          if (credentials.isMagicLink && credentials.token) {
+            user = await loginMagicLink(
+              credentials.email as string,
+              credentials.token as string,
+            )
+          } else if (credentials.token) {
+            user = await login2FA(
+              credentials.email as string,
+              credentials.password as string,
+              credentials.token as string,
+            )
+          } else {
+            user = await login(
+              credentials.email as string,
+              credentials.password as string,
+            )
+          }
 
           if (user.code === '2FA_REQUIRED') {
             throw new InvalidLoginError('2FA_REQUIRED')
