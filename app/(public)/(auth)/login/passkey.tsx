@@ -37,7 +37,10 @@ type PasskeyFormData = z.infer<typeof passkeySchema>
 
 const handlePasskey = async (email: string) => {
   const authenticationOptions = await getAuthenticationOptions(email)
-  const asseResp = await startAuthentication(authenticationOptions)
+  const asseResp = await startAuthentication({
+    ...authenticationOptions,
+    useBrowserAutofill: true,
+  })
   const verifyResp = await verifyAuthentication(asseResp, email)
   return verifyResp
 }
@@ -136,7 +139,7 @@ const Passkey = () => {
                       <Input
                         placeholder="name@example.com"
                         type="email"
-                        autoComplete="email"
+                        autoComplete="email webauthn"
                         disabled={authenticationMutation.isPending}
                         {...field}
                       />
