@@ -20,7 +20,7 @@ export default {
         email: {},
         password: {},
         token: {},
-        isMagicLink: {},
+        isLoginWithToken: {},
       },
       authorize: async (credentials) => {
         const cookieStore = await cookies()
@@ -28,7 +28,7 @@ export default {
         try {
           let user = null
 
-          if (credentials.isMagicLink && credentials.token) {
+          if (credentials.isLoginWithToken && credentials.token) {
             user = await loginMagicLink(
               credentials.email as string,
               credentials.token as string,

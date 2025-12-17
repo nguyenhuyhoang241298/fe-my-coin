@@ -16,7 +16,7 @@ export const useMagicLink = () => {
       await signIn('credentials', {
         email,
         token,
-        isMagicLink: true,
+        isLoginWithToken: true,
         redirect: false,
       })
         .then((res) => {
