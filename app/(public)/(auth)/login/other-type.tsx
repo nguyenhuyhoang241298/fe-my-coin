@@ -4,7 +4,7 @@ import Passkey from './passkey'
 
 const OtherType = () => {
   return (
-    <div className="flex items-center justify-between gap-4">
+    <div className="flex flex-col md:flex-row items-center justify-between gap-4">
       <GmailSigninButton />
       <MagicLink />
       <Passkey />

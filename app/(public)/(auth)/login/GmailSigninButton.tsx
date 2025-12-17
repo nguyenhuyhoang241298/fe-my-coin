@@ -13,7 +13,7 @@ const GmailSigninButton = () => {
     <Button
       onClick={signInWithGmail}
       variant="outline"
-      className="flex-1"
+      className="flex-1 w-full"
       type="button"
     >
       <Mail className="size-4 mr-1" />
