@@ -37,7 +37,10 @@ type PasskeyFormData = z.infer<typeof passkeySchema>
 
 const handlePasskey = async (email: string) => {
   const authenticationOptions = await getAuthenticationOptions(email)
-  const asseResp = await startAuthentication(authenticationOptions)
+  const asseResp = await startAuthentication({
+    ...authenticationOptions,
+    useBrowserAutofill: true,
+  })
   const verifyResp = await verifyAuthentication(asseResp, email)
   return verifyResp
 }
@@ -107,7 +110,7 @@ const Passkey = () => {
       <Button
         onClick={() => setOpen(true)}
         variant="outline"
-        className="flex-1"
+        className="flex-1 w-full"
         type="button"
       >
         <KeyRound className="size-4 mr-1" />
@@ -136,7 +139,7 @@ const Passkey = () => {
                       <Input
                         placeholder="name@example.com"
                         type="email"
-                        autoComplete="email"
+                        autoComplete="email webauthn"
                         disabled={authenticationMutation.isPending}
                         {...field}
                       />
