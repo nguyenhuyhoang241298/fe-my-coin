@@ -1,15 +1,9 @@
 import {
   BarChartIcon,
-  CameraIcon,
-  ClipboardListIcon,
-  DatabaseIcon,
-  FileCodeIcon,
-  FileIcon,
-  FileTextIcon,
   FolderIcon,
   HelpCircleIcon,
   LayoutDashboardIcon,
-  ListIcon,
+  MessageSquare,
   SearchIcon,
   SettingsIcon,
   UsersIcon,
@@ -23,113 +17,48 @@ export const DEFAULT_USER = {
 
 export const navMain = [
   {
-    title: 'Dashboard',
+    name: 'Dashboard',
     url: '#',
     icon: LayoutDashboardIcon,
   },
   {
-    title: 'Lifecycle',
-    url: '#',
-    icon: ListIcon,
+    name: 'Chat',
+    url: '/chat',
+    icon: MessageSquare,
   },
   {
-    title: 'Analytics',
+    name: 'Analytics',
     url: '#',
     icon: BarChartIcon,
   },
   {
-    title: 'Projects',
+    name: 'Projects',
     url: '#',
     icon: FolderIcon,
   },
   {
-    title: 'Team',
+    name: 'Team',
     url: '#',
     icon: UsersIcon,
   },
 ]
 
-export const navClouds = [
-  {
-    title: 'Capture',
-    icon: CameraIcon,
-    isActive: true,
-    url: '#',
-    items: [
-      {
-        title: 'Active Proposals',
-        url: '#',
-      },
-      {
-        title: 'Archived',
-        url: '#',
-      },
-    ],
-  },
-  {
-    title: 'Proposal',
-    icon: FileTextIcon,
-    url: '#',
-    items: [
-      {
-        title: 'Active Proposals',
-        url: '#',
-      },
-      {
-        title: 'Archived',
-        url: '#',
-      },
-    ],
-  },
-  {
-    title: 'Prompts',
-    icon: FileCodeIcon,
-    url: '#',
-    items: [
-      {
-        title: 'Active Proposals',
-        url: '#',
-      },
-      {
-        title: 'Archived',
-        url: '#',
-      },
-    ],
-  },
-]
-
 export const navSecondary = [
   {
-    title: 'Settings',
+    name: 'Settings',
     url: '/settings',
     icon: SettingsIcon,
   },
   {
-    title: 'Get Help',
+    name: 'Get Help',
     url: '#',
     icon: HelpCircleIcon,
   },
   {
-    title: 'Search',
+    name: 'Search',
     url: '#',
     icon: SearchIcon,
   },
 ]
 
-export const documents = [
-  {
-    name: 'Data Library',
-    url: '#',
-    icon: DatabaseIcon,
-  },
-  {
-    name: 'Reports',
-    url: '#',
-    icon: ClipboardListIcon,
-  },
-  {
-    name: 'Word Assistant',
-    url: '#',
-    icon: FileIcon,
-  },
-]
+export const allSidebarItems = [...navMain, ...navSecondary]

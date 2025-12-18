@@ -1,48 +1,23 @@
 'use client'
 
-import { ArrowUpCircleIcon } from 'lucide-react'
 import * as React from 'react'
 
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from '@/components/ui/sidebar'
-import useUserQuery from '@/hooks/user/useUserQuery'
-import { NavDocuments } from './nav-documents'
-import { NavMain } from './nav-main'
-import { NavSecondary } from './nav-secondary'
+import { Sidebar, SidebarContent, SidebarFooter } from '@/components/ui/sidebar'
+import NavComponent from './components/NavComponent'
+import { navMain, navSecondary } from './configs'
+import Header from './header'
 import { NavUser } from './nav-user'
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  useUserQuery()
-
   return (
     <Sidebar collapsible="offcanvas" {...props}>
-      <SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              asChild
-              className="data-[slot=sidebar-menu-button]:!p-1.5"
-            >
-              <a href="#">
-                <ArrowUpCircleIcon className="h-5 w-5" />
-                <span className="text-base font-semibold">Onus</span>
-              </a>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarHeader>
+      <Header />
+
       <SidebarContent>
-        <NavMain />
-        <NavDocuments />
-        <NavSecondary className="mt-auto" />
+        <NavComponent groupLabel="Main" list={navMain} />
+        <NavComponent groupLabel="Secondary" list={navSecondary} />
       </SidebarContent>
+
       <SidebarFooter>
         <NavUser />
       </SidebarFooter>
